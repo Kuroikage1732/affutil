@@ -1,0 +1,17 @@
+{
+    "extends": "../tsconfig",
+    "include": [
+        "./"
+    ],
+    "exclude": [
+        "./sample.js"
+    ],
+    "compilerOptions": {
+        "declaration": true,
+        "declarationDir": "../es",
+        "module": "es6",
+        "outDir": "../es",
+        "target": "ES6",
+        "typeRoots": []
+    }
+}

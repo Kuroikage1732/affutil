@@ -1,0 +1,55 @@
+{
+  "name": "affutil",
+  "version": "0.1.0",
+  "description": "a Javascript Module for Arcaea Format File",
+  "private": true,
+  "type": "module",
+  "main": "./dist/affutil.js",
+  "module": "./dist/affutil.esm.js",
+  "types": "./dist/affutil.d.ts",
+  "scripts": {
+    "test": "npm run sample",
+    "sample": "node ./sample.js",
+    "eslint": "eslint --fix src/**/*.ts",
+    "lint": "npm run eslint",
+    "build": "npm run eslint && tsc -p src/tsconfig.json && rollup --config"
+  },
+  "files": [
+    "dist",
+    "es",
+    "src",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuroikage1732/affutil.git"
+  },
+  "keywords": [
+    "arcaea"
+  ],
+  "author": "Kuroikage1732",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kuroikage1732/affutil/issues"
+  },
+  "homepage": "https://github.com/kuroikage1732/affutil#readme",
+  "devDependencies": {
+    "@optimize-lodash/rollup-plugin": "^3.0.0",
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "@types/lodash-es": "^4.17.6",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.17.0",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-uglify": "^6.0.4",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  }
+}
