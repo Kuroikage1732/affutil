@@ -37,14 +37,6 @@ export default [
       typescript(tsconfig.compilerOptions)
     ],
   },
-  {
-    input: './src/index.ts',
-    output: {
-      format: 'es',
-      file: './dist/affutil.esm.d.ts',
-    },
-    plugins: [dts()],
-  },
 
   // 编译成 umd 文件
   {
@@ -63,14 +55,6 @@ export default [
       typescript(tsconfig.compilerOptions),
       buble(),
     ],
-  },
-  {
-    input: './src/index.ts',
-    output: {
-      format: 'es',
-      file: './dist/affutil.d.ts',
-    },
-    plugins: [dts()],
   },
 
   // 编译成 umd 文件，并压缩
