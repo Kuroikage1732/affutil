@@ -10,7 +10,10 @@
 ### 导入：
 #### In Node.js:
 ```javascript
-// only support ES6 or later
+// CommonJS
+var aff = require("affutil").default;
+
+// ES6 or later
 import aff from 'affutil';
 ```
 
