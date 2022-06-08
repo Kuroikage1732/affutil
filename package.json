@@ -1,11 +1,11 @@
 {
   "name": "affutil",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "a Javascript Module for Arcaea Format File",
   "type": "module",
-  "main": "./dist/affutil.js",
-  "module": "./dist/affutil.esm.js",
-  "types": "./dist/affutil.d.ts",
+  "main": "dist/affutil.js",
+  "module": "dist/affutil.esm.js",
+  "types": "es/index.d.ts",
   "scripts": {
     "test": "npm run sample",
     "sample": "node ./sample.js",
