@@ -1,6 +1,6 @@
 {
   "name": "affutil",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "a Javascript Module for Arcaea Format File",
   "type": "module",
   "main": "dist/affutil.js",
@@ -43,7 +43,6 @@
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "eslint": "^8.17.0",
-    "rollup-plugin-dts": "^4.2.2",
     "rollup-plugin-uglify": "^6.0.4",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
