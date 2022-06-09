@@ -40,7 +40,7 @@ arc(571,1071,1.00,1.00,s,1.00,1.00,1,none,false);
 var affobj = aff.parse(affstr);
 console.log(affobj);
 ```
-详细示例请移步 [sample.js](./sample.js)
+详细示例请移步 [example.js](./example.js)
 
 ## 感谢
 *感谢恐狼同意将本项目公开*
