@@ -127,3 +127,4 @@ out
 .pnp.*
 
 webtest
+dist/affutil.zip
