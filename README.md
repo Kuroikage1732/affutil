@@ -9,6 +9,10 @@
 ## 用法
 ### 导入：
 #### In Node.js:
+```shell
+npm i affutil
+```
+
 ```javascript
 // CommonJS
 var aff = require("affutil");
