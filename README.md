@@ -11,7 +11,7 @@
 #### In Node.js:
 ```javascript
 // CommonJS
-var aff = require("affutil").default;
+var aff = require("affutil");
 
 // ES6 or later
 import aff from 'affutil';
@@ -39,8 +39,8 @@ arc(571,1071,1.00,1.00,s,1.00,1.00,1,none,false);
 `
 var affobj = aff.parse(affstr);
 console.log(affobj);
-console.log(affobj.toString());
 ```
+详细示例请移步 [sample.js](./sample.js)
 
 ## 感谢
 *感谢恐狼同意将本项目公开*
