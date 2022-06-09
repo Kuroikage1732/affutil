@@ -1,4 +1,4 @@
-import aff from './dist/affutil.esm.js';
+import aff from './';
 
 var affstr = `
 AudioOffset:5

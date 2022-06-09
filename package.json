@@ -6,8 +6,7 @@
   "module": "dist/affutil.esm.js",
   "types": "es/index.d.ts",
   "scripts": {
-    "test": "npm run sample",
-    "sample": "node ./sample.js",
+    "test": "node ./example.js",
     "eslint": "eslint --fix src/**/*.ts",
     "lint": "npm run eslint",
     "build": "npm run eslint && tsc -p src/tsconfig.json && rollup --config"
