@@ -6,6 +6,9 @@ export class Flick extends Note {
     dx: number;
     dy: number;
 
+    /**
+     * @param time Note时间点
+     */
     constructor(time: number, x: number, y: number, dx: number, dy: number) {
         super(time);
         this.x = x;

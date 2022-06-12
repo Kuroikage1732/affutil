@@ -2,13 +2,13 @@ import { sortBy } from 'lodash-es';
 import { Note, NoteGroup } from './note/index';
 
 export function sort(unsorted: NoteGroup) {
-    const sortable_timing = new NoteGroup();
-    const sortable_tap = new NoteGroup();
-    const sortable_hold = new NoteGroup();
-    const sortable_arc = new NoteGroup();
-    const sortable_camera = new NoteGroup();
-    const sortable_scene = new NoteGroup();
-    const sortable_group = new NoteGroup();
+    const sortable_timing: any = new NoteGroup();
+    const sortable_tap: any = new NoteGroup();
+    const sortable_hold: any = new NoteGroup();
+    const sortable_arc: any = new NoteGroup();
+    const sortable_camera: any = new NoteGroup();
+    const sortable_scene: any = new NoteGroup();
+    const sortable_group: any = new NoteGroup();
     const sortedlist: NoteGroup = new unsorted.constructor.prototype.constructor();
 
     unsorted.forEach((eachnote: Note | NoteGroup) => {
@@ -36,7 +36,7 @@ export function sort(unsorted: NoteGroup) {
     sortedlist.concat(sortBy(sortable_tap, ['time', 'lane']));
     sortedlist.concat(sortBy(sortable_hold, ['time', 'lane', 'totime']));
     sortedlist.concat(sortBy(sortable_arc, ['time', 'fromx', 'fromy', 'totime', 'tox', 'toy']));
-    sortedlist.sort((a: Note, b: Note) => { return a.time - b.time; });
+    sortedlist.sort((a: any, b: any) => { return a.time - b.time; });
     sortedlist.concat(sortable_group);
 
     return sortedlist;

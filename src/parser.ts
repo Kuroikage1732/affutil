@@ -160,3 +160,9 @@ export function parse(affstr: string) {
     });
     return notelist;
 }
+
+export default {
+    stringify: stringify,
+    parseLine: parseLine,
+    parse: parse
+}

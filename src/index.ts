@@ -1,5 +1,5 @@
-import * as note from './note/index';
-import * as parser from './parser';
+import note from './note/index';
+import parser from './parser';
 
 const parse = parser.parse;
 const parseLine = parser.parseLine;

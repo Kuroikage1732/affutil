@@ -26,17 +26,17 @@ export {
 };
 
 export default {
-    Note,
-    NoteGroup,
-    timeAlign,
-    Tap,
-    Hold,
-    Arc,
-    Timing,
-    SceneControl,
-    Camera,
-    Flick,
-    TimingGroup,
-    AffList,
-    validstrings
+    Note: Note,
+    NoteGroup: NoteGroup,
+    timeAlign: timeAlign,
+    Tap: Tap,
+    Hold: Hold,
+    Arc: Arc,
+    Timing: Timing,
+    SceneControl: SceneControl,
+    Camera: Camera,
+    Flick: Flick,
+    TimingGroup: TimingGroup,
+    AffList: AffList,
+    validstrings: validstrings
 };

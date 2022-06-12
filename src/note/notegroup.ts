@@ -6,6 +6,11 @@ export class AffList extends NoteGroup {
     offset: number;
     desnity: number;
 
+    /**
+     * @param notes Note容器
+     * @param offset 控制AudioOffset
+     * @param desnity 控制TimingPointDesnityFactor
+     */
     constructor(notes: Note[] | NoteGroup = [], offset = 0, desnity = 1) {
         super(notes);
         this.offset = Math.floor(offset);
@@ -29,7 +34,7 @@ export class AffList extends NoteGroup {
         ].join('\n');
     }
 
-    offsetto(value: number) {
+    offsetto(value: number): NoteGroup {
         let basebpm = 0;
         this.forEach((each) => {
             if(each instanceof Timing && each.time == 0) {
@@ -70,7 +75,7 @@ export class TimingGroup extends NoteGroup {
         return this.length;
     }
 
-    offsetto(value: number) {
+    offsetto(value: number): NoteGroup {
         let basebpm = 0;
         this.forEach((each) => {
             if(each instanceof Timing && each.time == 0) {

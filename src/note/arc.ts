@@ -1,6 +1,6 @@
 import { Hold } from './hold';
 import { cloneDeep } from 'lodash-es';
-import validstrings from './validstrings';
+import { fxlist, slideeasinglist } from './validstrings';
 import { timeAlign } from './common_note';
 import { EasingFunc, slicer } from '../easing/index';
 
@@ -15,7 +15,19 @@ export class Arc extends Hold {
     _skynote!: number[];
     _fx!: string;
 
-
+    /**
+     * @param time Note时间点
+     * @param totime Note结束时间点
+     * @param fromx 起始点x坐标
+     * @param tox 起始点x坐标
+     * @param slideeasing 缓动类型，支持s|b|si|so两两组合/缓动函数/两个缓动函数组成的列表
+     * @param fromy 终点y坐标
+     * @param toy 终点y坐标
+     * @param color Arc颜色，要求>=0
+     * @param isskyline 是否为黑线
+     * @param skynote 天键时间点列表
+     * @param fx FX
+     */
     constructor(
         time: number,
         totime: number,
@@ -76,8 +88,8 @@ export class Arc extends Hold {
                 }
             }
         } else if(!(easingtype instanceof Function)) {
-            if (validstrings.slideeasinglist.indexOf(easingtype) == -1) {
-                throw `invalid value ${easingtype} for attribute "slideeasing" (only accept ${validstrings.slideeasinglist})`;
+            if (slideeasinglist.indexOf(easingtype) == -1) {
+                throw `invalid value ${easingtype} for attribute "slideeasing" (only accept ${slideeasinglist})`;
             }
         }
         this._slideeasing = easingtype;
@@ -88,8 +100,8 @@ export class Arc extends Hold {
 
     set fx(value) {
         if (value != 'none') {
-            if (validstrings.fxlist.indexOf(value) == -1) {
-                throw `invalid value ${value} for attribute "fx" (only accept ${validstrings.fxlist})`;
+            if (fxlist.indexOf(value) == -1) {
+                throw `invalid value ${value} for attribute "fx" (only accept ${fxlist})`;
             }
         }
         this._fx = value;
@@ -138,13 +150,22 @@ export class Arc extends Hold {
         return [x_type, y_type];
     }
 
-    get(item: number): [number, number] {
+    /**
+     * 获取对应时间点的Arc坐标
+     * @param time 时间点
+     * @returns 坐标
+     */
+    get(time: number): [number, number] {
         const easingtype = this.__geteasingtype();
-        const slice_x = slicer(item, this.time, this.totime, this.fromx, this.tox, easingtype[0]);
-        const slice_y = slicer(item, this.time, this.totime, this.fromy, this.toy, easingtype[1]);
+        const slice_x = slicer(time, this.time, this.totime, this.fromx, this.tox, easingtype[0]);
+        const slice_y = slicer(time, this.time, this.totime, this.fromy, this.toy, easingtype[1]);
         return [slice_x, slice_y];
     }
 
+    /**
+     * 将对象转换为字符串(注：只有slideeasing值为note.validstrings.slideeasinglist中的规定值时才允许返回)
+     * @returns 转换后的字符串
+     */
     toString() {
         const arcstr = `arc(${this.time},${this.totime},${this.fromx.toFixed(2)},${this.tox.toFixed(2)},${this._slideeasing},${this.fromy.toFixed(2)},${this.toy.toFixed(2)},${this._color},${this._fx},${this.isskyline})`;
         let skynotestr = '';
@@ -160,6 +181,11 @@ export class Arc extends Hold {
         return arcstr + ((skynotestr == '') ? '' : `[${skynotestr}]`) + ';';
     }
 
+    /**
+     * 将Note移动到某个时间点
+     * @param dest 偏移到的时间点
+     * @returns 偏移后的Note对象
+     */
     moveto(dest: number) {
         const offset = dest - this.time;
         for (let index = 0; index < this._skynote.length; index++) {
@@ -168,18 +194,31 @@ export class Arc extends Hold {
         return this;
     }
 
+    /**
+     * 将Note镜像(注：此方法会修改对象)
+     * @returns 镜像后的Note
+     */
     mirror() {
         this.fromx = 1 - this.fromx;
         this.tox = 1 - this.tox;
         return this;
     }
 
+    /**
+     * 将Note垂直镜像(注：此方法会修改对象)
+     * @returns 镜像后的Note
+     */
     vmirror() {
         this.fromy = 1 - this.fromy;
         this.toy = 1 - this.toy;
         return this;
     }
 
+    /**
+     * 偏移Note指定的毫秒数
+     * @param value 偏移的毫秒数
+     * @returns 偏移后的Note对象
+     */
     offsetto(value: number) {
         super.offsetto(value);
         if (this._skynote) {
@@ -190,6 +229,13 @@ export class Arc extends Hold {
         return this;
     }
 
+    /**
+     * 将Note时间对齐
+     * @param bpm 基准bpm
+     * @param error 允许的误差
+     * @param lcm 需要对齐的细分的最小公倍数
+     * @returns 时间对齐的Note对象
+     */
     align(bpm: number, error = 3, lcm = 96) {
         super.align(bpm, error, lcm);
         if (this._skynote) {
@@ -200,6 +246,12 @@ export class Arc extends Hold {
         return this;
     }
 
+    /**
+     * 偏移Arc指定大小
+     * @param xValue x轴偏移量
+     * @param yValue y轴偏移量
+     * @returns 偏移后的Note对象
+     */
     transfer(xValue: number, yValue: number) {
         this.fromx += xValue;
         this.tox += xValue;

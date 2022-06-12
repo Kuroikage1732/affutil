@@ -11,6 +11,9 @@ export class Camera extends Note {
     _easing!: string;
     lastingtime: number;
 
+    /**
+     * @param time Note时间点
+     */
     constructor(
         time: number,
         transverse: number,

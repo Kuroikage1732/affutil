@@ -1,4 +1,7 @@
-export const slideeasinglist: string[] = [
+/**
+ * 缓动类型中合法的字符串
+ */
+const slideeasinglist: string[] = [
     'b',
     's',
     'si',
@@ -9,7 +12,10 @@ export const slideeasinglist: string[] = [
     'siso'
 ];
 
-export const slideeasingexlist: string[] = [
+/**
+ * 拓展缓动类型中合法的字符串，可以用于计算但是不能输出
+ */
+const slideeasingexlist: string[] = [
     'bb',
     'sb',
     'sib',
@@ -24,12 +30,18 @@ export const slideeasingexlist: string[] = [
     'sso',
 ];
 
-export const fxlist: string[] = [
+/**
+ * Arc的fx属性中合法的字符串
+ */
+const fxlist: string[] = [
     'full',
     'incremental'
 ];
 
-export const cameraeasinglist: string[] = [
+/**
+ * Camera的easing属性中合法的字符串
+ */
+const cameraeasinglist: string[] = [
     'qi',
     'qo',
     'l',
@@ -37,7 +49,10 @@ export const cameraeasinglist: string[] = [
     's'
 ];
 
-export const scenetypelist: string[] = [
+/**
+ * SceneControl的scenetype属性中合法的字符串
+ */
+const scenetypelist: string[] = [
     'trackshow',
     'trackhide',
     'redline',
@@ -45,6 +60,14 @@ export const scenetypelist: string[] = [
     'arcahvdebris',
     'hidegroup'
 ];
+
+export {
+    slideeasinglist,
+    slideeasingexlist,
+    fxlist,
+    cameraeasinglist,
+    scenetypelist
+};
 
 export default {
     slideeasinglist: slideeasinglist,
