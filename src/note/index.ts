@@ -7,9 +7,9 @@ import { SceneControl } from './scenecontrol';
 import { Camera } from './camera';
 import { Flick } from './flick';
 import { TimingGroup, AffList } from './notegroup';
-import './validstrings';
+import validstrings from './validstrings';
 
-const note = {
+export {
     Note,
     NoteGroup,
     timeAlign,
@@ -21,7 +21,22 @@ const note = {
     Camera,
     Flick,
     TimingGroup,
-    AffList
+    AffList,
+    validstrings
 };
 
-export default note;
+export default {
+    Note,
+    NoteGroup,
+    timeAlign,
+    Tap,
+    Hold,
+    Arc,
+    Timing,
+    SceneControl,
+    Camera,
+    Flick,
+    TimingGroup,
+    AffList,
+    validstrings
+};

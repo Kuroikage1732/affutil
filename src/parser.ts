@@ -1,12 +1,16 @@
-import { Arc } from './note/arc';
-import { Camera } from './note/camera';
-import { NoteGroup, Note } from './note/common_note';
-import { Flick } from './note/flick';
-import { Hold } from './note/hold';
-import { TimingGroup, AffList } from './note/notegroup';
-import { SceneControl } from './note/scenecontrol';
-import { Tap } from './note/tap';
-import { Timing } from './note/timing';
+import {
+    Arc,
+    Camera,
+    NoteGroup,
+    Note,
+    Flick,
+    Hold,
+    TimingGroup,
+    AffList,
+    SceneControl,
+    Tap,
+    Timing
+} from './note/index';
 import { sort } from './sorter';
 
 export function stringify(notelist: NoteGroup) {

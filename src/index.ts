@@ -1,20 +1,22 @@
-import note from './note/index';
-import { stringify, parseLine, parse } from './parser';
+import * as note from './note/index';
+import * as parser from './parser';
 
-const parser = {
-    stringify,
-    parseLine,
-    parse
-};
+const parse = parser.parse;
+const parseLine = parser.parseLine;
+const stringify = parser.stringify;
 
-const aff = {
+export {
     note,
     parser,
-    stringify,
+    parse,
     parseLine,
-    parse
+    stringify
 };
 
-Object.assign(aff, note);
-
-export default aff;
+export default {
+    note,
+    parser,
+    parse,
+    parseLine,
+    stringify
+};

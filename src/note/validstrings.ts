@@ -1,4 +1,4 @@
-const slideeasinglist: string[] = [
+export const slideeasinglist: string[] = [
     'b',
     's',
     'si',
@@ -9,7 +9,7 @@ const slideeasinglist: string[] = [
     'siso'
 ];
 
-const slideeasingexlist: string[] = [
+export const slideeasingexlist: string[] = [
     'bb',
     'sb',
     'sib',
@@ -24,12 +24,12 @@ const slideeasingexlist: string[] = [
     'sso',
 ];
 
-const fxlist: string[] = [
+export const fxlist: string[] = [
     'full',
     'incremental'
 ];
 
-const cameraeasinglist: string[] = [
+export const cameraeasinglist: string[] = [
     'qi',
     'qo',
     'l',
@@ -37,7 +37,7 @@ const cameraeasinglist: string[] = [
     's'
 ];
 
-const scenetypelist: string[] = [
+export const scenetypelist: string[] = [
     'trackshow',
     'trackhide',
     'redline',
@@ -46,12 +46,10 @@ const scenetypelist: string[] = [
     'hidegroup'
 ];
 
-const validstrings = {
+export default {
     slideeasinglist: slideeasinglist,
     slideeasingexlist: slideeasingexlist,
     fxlist: fxlist,
     cameraeasinglist: cameraeasinglist,
     scenetypelist: scenetypelist
 };
-
-export default validstrings;

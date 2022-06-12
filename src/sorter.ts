@@ -1,5 +1,5 @@
 import { sortBy } from 'lodash-es';
-import { Note, NoteGroup } from './note/common_note';
+import { Note, NoteGroup } from './note/index';
 
 export function sort(unsorted: NoteGroup) {
     const sortable_timing = new NoteGroup();
