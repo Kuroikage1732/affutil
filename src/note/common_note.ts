@@ -52,7 +52,7 @@ export class Note {
      * @returns Note的Note语句形式字符串
      */
     toString() {
-        return `;`;
+        return ';';
     }
 
     /**

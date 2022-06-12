@@ -1,13 +1,13 @@
 /*!
- * affutil 0.1.7 (https://github.com/kuroikage1732/affutil#readme)
+ * affutil 0.2.0 (https://github.com/kuroikage1732/affutil#readme)
  * Copyright 2022-2022 Kuroikage1732
  * Licensed under MIT
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.affutil = factory());
-})(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.affutil = {}));
+})(this, (function (exports) { 'use strict';
 
   /** Detect free variable `global` from Node.js. */
   var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
@@ -3975,6 +3975,14 @@
 
   var sortBy$1 = sortBy;
 
+  /**
+   * 自动对齐时间点
+   * @param time 待偏移的时间点
+   * @param bpm 基准bpm
+   * @param error 允许的误差
+   * @param lcm 需要对齐的细分的最小公倍数
+   * @returns 时间对齐后的时间点
+   */
   function timeAlign(time, bpm, error, lcm) {
       if ( error === void 0 ) error = 3;
       if ( lcm === void 0 ) lcm = 96;
@@ -4006,23 +4014,57 @@
   };
 
   var prototypeAccessors = { type: { configurable: true } };
+  /**
+   * 获取类名
+   */
   prototypeAccessors.type.get = function () {
       return this.constructor.name;
   };
+  /**
+   * 将对象转换为字符串
+   * @returns Note的Note语句形式字符串
+   */
+  Note.prototype.toString = function toString () {
+      return ';';
+  };
+  /**
+   * 将Note移动到某个时间点
+   * @param dest 偏移到的时间点
+   * @returns 偏移后的Note对象
+   */
   Note.prototype.moveto = function moveto (dest) {
       this.time = Math.floor(dest);
       return this;
   };
-  Note.prototype.copy = function copy () {
+  /**
+   * @returns 返回Note对象的深拷贝
+   */
+  Note.prototype.clone = function clone () {
       return cloneDeep(this);
   };
+  /**
+   * 将Note镜像(注：此方法会修改对象)
+   * @returns 镜像后的Note
+   */
   Note.prototype.mirror = function mirror () {
       return this;
   };
+  /**
+   * 偏移Note指定的毫秒数
+   * @param value 偏移的毫秒数
+   * @returns 偏移后的Note对象
+   */
   Note.prototype.offsetto = function offsetto (value) {
       this.time = Math.floor(this.time + value);
       return this;
   };
+  /**
+   * 将Note时间对齐
+   * @param bpm 基准bpm
+   * @param error 允许的误差
+   * @param lcm 需要对齐的细分的最小公倍数
+   * @returns 时间对齐的Note对象
+   */
   Note.prototype.align = function align (bpm, error, lcm) {
           if ( error === void 0 ) error = 3;
           if ( lcm === void 0 ) lcm = 96;
@@ -4055,21 +4097,35 @@
       NoteGroup.prototype.constructor = NoteGroup;
 
       var prototypeAccessors$1 = { type: { configurable: true } };
+      /**
+       * 获取类名
+       */
       prototypeAccessors$1.type.get = function () {
           return this.constructor.name;
       };
+      /**
+       * Note容器内所有Note的Note语句形式字符串
+       * @returns 转换后的字符串
+       */
       NoteGroup.prototype.toString = function toString () {
+          var this$1$1 = this;
+
           var str = '';
-          this.forEach(function (value, index, arr) {
+          this.forEach(function (value, index) {
               if (value) {
                   str += value.toString();
               }
-              if (index < arr.length - 1) {
+              if (index < this$1$1.length - 1) {
                   str += '\n';
               }
           });
           return str;
       };
+      /**
+       * 向容器中追加Note对象或Note容器对象
+       * @param objs 接收Note或Note容器对象
+       * @returns 追加后的Note容器长度
+       */
       NoteGroup.prototype.push = function push () {
           var this$1$1 = this;
           var objs = [], len = arguments.length;
@@ -4080,23 +4136,28 @@
           });
           return this.length;
       };
+      /**
+       * 连接多个Note容器对象(注：此方法会改变 NoteGroup 内容)
+       * @param iterables 待连接的Note容器对象
+       * @returns 连接后的Note容器
+       */
       NoteGroup.prototype.concat = function concat () {
           var this$1$1 = this;
           var iterables = [], len = arguments.length;
           while ( len-- ) iterables[ len ] = arguments[ len ];
 
           iterables.forEach(function (iter) {
-              if (iter instanceof NoteGroup) {
-                  Array.prototype.concat.call(this$1$1, iter);
-              }
-              else {
-                  iter.forEach(function (item) {
-                      this$1$1.push(item);
-                  });
-              }
+              iter.forEach(function (item) {
+                  this$1$1.push(item);
+              });
           });
           return this;
       };
+      /**
+       * 将Note容器整体偏移到一个时间点
+       * @param dest 偏移到的时间点
+       * @returns 偏移后的Note容器
+       */
       NoteGroup.prototype.moveto = function moveto (dest) {
           var this$1$1 = this;
 
@@ -4107,6 +4168,25 @@
           });
           return this;
       };
+      /**
+       * 将Note容器整体偏移一个毫秒数
+       * @param value 偏移到的时间点
+       * @returns 偏移后的Note容器
+       */
+      NoteGroup.prototype.offsetto = function offsetto (value) {
+          var this$1$1 = this;
+
+          this.forEach(function (v, index) {
+              if (v) {
+                  this$1$1[index].offsetto(value);
+              }
+          });
+          return this;
+      };
+      /**
+       * 将Note容器内部所有Note镜像
+       * @returns 镜像后的Note容器
+       */
       NoteGroup.prototype.mirror = function mirror () {
           var this$1$1 = this;
 
@@ -4117,6 +4197,13 @@
           });
           return this;
       };
+      /**
+       * 将Note容器内部所有Note对象时间对齐
+       * @param bpm 基准bpm
+       * @param error 允许的误差
+       * @param lcm 需要对齐的细分的最小公倍数
+       * @returns 时间对齐的Note容器
+       */
       NoteGroup.prototype.align = function align (bpm, error, lcm) {
           var this$1$1 = this;
           if ( error === void 0 ) error = 3;
@@ -4181,9 +4268,16 @@
       Hold.prototype.constructor = Hold;
 
       var prototypeAccessors = { length: { configurable: true } };
+      /**
+       * Note的持续时长
+       */
       prototypeAccessors.length.get = function () {
           return Math.floor(this.totime - this.time);
       };
+      /**
+       * 将对象转换为字符串
+       * @returns Note的Note语句形式字符串
+       */
       Hold.prototype.toString = function toString () {
           return ("hold(" + (Math.floor(this.time)) + "," + (Math.floor(this.totime)) + "," + (this._lane) + ");");
       };
@@ -4193,8 +4287,13 @@
           this.totime += this.time - time;
           return this;
       };
-      Hold.prototype.copyto = function copyto (dest) {
-          var alterthis = this.copy();
+      /**
+       * 返回移动到某个时间点Note对象的深拷贝
+       * @param dest 偏移到的时间点
+       * @returns 偏移后Note的深拷贝
+       */
+      Hold.prototype.cloneto = function cloneto (dest) {
+          var alterthis = this.clone();
           return alterthis.moveto(dest);
       };
       Hold.prototype.offsetto = function offsetto (value) {
@@ -4219,6 +4318,9 @@
       return Hold;
   }(Tap));
 
+  /**
+   * 缓动类型中合法的字符串
+   */
   var slideeasinglist = [
       'b',
       's',
@@ -4229,6 +4331,9 @@
       'sosi',
       'siso'
   ];
+  /**
+   * 拓展缓动类型中合法的字符串，可以用于计算但是不能输出
+   */
   var slideeasingexlist = [
       'bb',
       'sb',
@@ -4242,10 +4347,16 @@
       'ssi',
       'bso',
       'sso' ];
+  /**
+   * Arc的fx属性中合法的字符串
+   */
   var fxlist = [
       'full',
       'incremental'
   ];
+  /**
+   * Camera的easing属性中合法的字符串
+   */
   var cameraeasinglist = [
       'qi',
       'qo',
@@ -4253,6 +4364,9 @@
       'reset',
       's'
   ];
+  /**
+   * SceneControl的scenetype属性中合法的字符串
+   */
   var scenetypelist = [
       'trackshow',
       'trackhide',
@@ -4417,8 +4531,8 @@
               }
           }
           else if (!(easingtype instanceof Function)) {
-              if (validstrings.slideeasinglist.indexOf(easingtype) == -1) {
-                  throw ("invalid value " + easingtype + " for attribute \"slideeasing\" (only accept " + (validstrings.slideeasinglist) + ")");
+              if (slideeasinglist.indexOf(easingtype) == -1) {
+                  throw ("invalid value " + easingtype + " for attribute \"slideeasing\" (only accept " + slideeasinglist + ")");
               }
           }
           this._slideeasing = easingtype;
@@ -4428,8 +4542,8 @@
       };
       prototypeAccessors.fx.set = function (value) {
           if (value != 'none') {
-              if (validstrings.fxlist.indexOf(value) == -1) {
-                  throw ("invalid value " + value + " for attribute \"fx\" (only accept " + (validstrings.fxlist) + ")");
+              if (fxlist.indexOf(value) == -1) {
+                  throw ("invalid value " + value + " for attribute \"fx\" (only accept " + fxlist + ")");
               }
           }
           this._fx = value;
@@ -4481,12 +4595,21 @@
           }
           return [x_type, y_type];
       };
-      Arc.prototype.get = function get (item) {
+      /**
+       * 获取对应时间点的Arc坐标
+       * @param time 时间点
+       * @returns 坐标
+       */
+      Arc.prototype.get = function get (time) {
           var easingtype = this.__geteasingtype();
-          var slice_x = slicer(item, this.time, this.totime, this.fromx, this.tox, easingtype[0]);
-          var slice_y = slicer(item, this.time, this.totime, this.fromy, this.toy, easingtype[1]);
+          var slice_x = slicer(time, this.time, this.totime, this.fromx, this.tox, easingtype[0]);
+          var slice_y = slicer(time, this.time, this.totime, this.fromy, this.toy, easingtype[1]);
           return [slice_x, slice_y];
       };
+      /**
+       * 将对象转换为字符串(注：只有slideeasing值为note.validstrings.slideeasinglist中的规定值时才允许返回)
+       * @returns 转换后的字符串
+       */
       Arc.prototype.toString = function toString () {
           var arcstr = "arc(" + (this.time) + "," + (this.totime) + "," + (this.fromx.toFixed(2)) + "," + (this.tox.toFixed(2)) + "," + (this._slideeasing) + "," + (this.fromy.toFixed(2)) + "," + (this.toy.toFixed(2)) + "," + (this._color) + "," + (this._fx) + "," + (this.isskyline) + ")";
           var skynotestr = '';
@@ -4501,6 +4624,11 @@
           }
           return arcstr + ((skynotestr == '') ? '' : ("[" + skynotestr + "]")) + ';';
       };
+      /**
+       * 将Note移动到某个时间点
+       * @param dest 偏移到的时间点
+       * @returns 偏移后的Note对象
+       */
       Arc.prototype.moveto = function moveto (dest) {
           var offset = dest - this.time;
           for (var index = 0; index < this._skynote.length; index++) {
@@ -4508,16 +4636,29 @@
           }
           return this;
       };
+      /**
+       * 将Note镜像(注：此方法会修改对象)
+       * @returns 镜像后的Note
+       */
       Arc.prototype.mirror = function mirror () {
           this.fromx = 1 - this.fromx;
           this.tox = 1 - this.tox;
           return this;
       };
+      /**
+       * 将Note垂直镜像(注：此方法会修改对象)
+       * @returns 镜像后的Note
+       */
       Arc.prototype.vmirror = function vmirror () {
           this.fromy = 1 - this.fromy;
           this.toy = 1 - this.toy;
           return this;
       };
+      /**
+       * 偏移Note指定的毫秒数
+       * @param value 偏移的毫秒数
+       * @returns 偏移后的Note对象
+       */
       Arc.prototype.offsetto = function offsetto (value) {
           var this$1$1 = this;
 
@@ -4529,6 +4670,13 @@
           }
           return this;
       };
+      /**
+       * 将Note时间对齐
+       * @param bpm 基准bpm
+       * @param error 允许的误差
+       * @param lcm 需要对齐的细分的最小公倍数
+       * @returns 时间对齐的Note对象
+       */
       Arc.prototype.align = function align (bpm, error, lcm) {
           var this$1$1 = this;
           if ( error === void 0 ) error = 3;
@@ -4542,6 +4690,12 @@
           }
           return this;
       };
+      /**
+       * 偏移Arc指定大小
+       * @param xValue x轴偏移量
+       * @param yValue y轴偏移量
+       * @returns 偏移后的Note对象
+       */
       Arc.prototype.transfer = function transfer (xValue, yValue) {
           this.fromx += xValue;
           this.tox += xValue;
@@ -4834,17 +4988,18 @@
       Camera: Camera,
       Flick: Flick,
       TimingGroup: TimingGroup,
-      AffList: AffList
+      AffList: AffList,
+      validstrings: validstrings
   };
 
-  function stringify(notelist) {
+  function stringify$1(notelist) {
       notelist = sort(notelist);
       return notelist.toString();
   }
   function _notestriter(notestr, termsign) {
       return notestr.slice(0, notestr.indexOf(termsign));
   }
-  function parseLine(notestr) {
+  function parseLine$1(notestr) {
       var tempnotestr = notestr.trim();
       var noteobj = new Note(0);
       // 依次切割出note类型，参数，      子表达式（如果有）
@@ -4909,7 +5064,7 @@
       }
       return noteobj;
   }
-  function parse(affstr) {
+  function parse$1(affstr) {
       var notestrlist = affstr.split('\n');
       var notelist = new AffList();
       var tempstruct;
@@ -4927,7 +5082,7 @@
                   tempstruct = new TimingGroup();
               }
               else {
-                  var loadednote = parseLine(stripedlinestr);
+                  var loadednote = parseLine$1(stripedlinestr);
                   if (loadednote instanceof TimingGroup) {
                       if (tempstruct.length == 0) {
                           tempstruct = loadednote;
@@ -4949,22 +5104,31 @@
       });
       return notelist;
   }
-
   var parser = {
-      stringify: stringify,
-      parseLine: parseLine,
-      parse: parse
+      stringify: stringify$1,
+      parseLine: parseLine$1,
+      parse: parse$1
   };
-  var aff = {
+
+  var parse = parser.parse;
+  var parseLine = parser.parseLine;
+  var stringify = parser.stringify;
+  var index = {
       note: note,
       parser: parser,
-      stringify: stringify,
+      parse: parse,
       parseLine: parseLine,
-      parse: parse
+      stringify: stringify
   };
-  Object.assign(aff, note);
 
-  return aff;
+  exports["default"] = index;
+  exports.note = note;
+  exports.parse = parse;
+  exports.parseLine = parseLine;
+  exports.parser = parser;
+  exports.stringify = stringify;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
 //# sourceMappingURL=affutil.js.map

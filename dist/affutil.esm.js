@@ -1,5 +1,5 @@
 /*!
- * affutil 0.1.7 (https://github.com/kuroikage1732/affutil#readme)
+ * affutil 0.2.0 (https://github.com/kuroikage1732/affutil#readme)
  * Copyright 2022-2022 Kuroikage1732
  * Licensed under MIT
  */
@@ -3969,6 +3969,14 @@ var sortBy = baseRest(function(collection, iteratees) {
 
 var sortBy$1 = sortBy;
 
+/**
+ * 自动对齐时间点
+ * @param time 待偏移的时间点
+ * @param bpm 基准bpm
+ * @param error 允许的误差
+ * @param lcm 需要对齐的细分的最小公倍数
+ * @returns 时间对齐后的时间点
+ */
 function timeAlign(time, bpm, error = 3, lcm = 96) {
     const fpb = 60000 * 4 / bpm / lcm;
     let alignedTime = 0;
@@ -3993,32 +4001,72 @@ function timeAlign(time, bpm, error = 3, lcm = 96) {
     return Math.floor(alignedTime);
 }
 class Note {
+    /**
+     * @param time Note时间点
+     */
     constructor(time) {
         this.time = Math.floor(time);
     }
+    /**
+     * 获取类名
+     */
     get type() {
         return this.constructor.name;
     }
+    /**
+     * 将对象转换为字符串
+     * @returns Note的Note语句形式字符串
+     */
+    toString() {
+        return ';';
+    }
+    /**
+     * 将Note移动到某个时间点
+     * @param dest 偏移到的时间点
+     * @returns 偏移后的Note对象
+     */
     moveto(dest) {
         this.time = Math.floor(dest);
         return this;
     }
-    copy() {
+    /**
+     * @returns 返回Note对象的深拷贝
+     */
+    clone() {
         return cloneDeep(this);
     }
+    /**
+     * 将Note镜像(注：此方法会修改对象)
+     * @returns 镜像后的Note
+     */
     mirror() {
         return this;
     }
+    /**
+     * 偏移Note指定的毫秒数
+     * @param value 偏移的毫秒数
+     * @returns 偏移后的Note对象
+     */
     offsetto(value) {
         this.time = Math.floor(this.time + value);
         return this;
     }
+    /**
+     * 将Note时间对齐
+     * @param bpm 基准bpm
+     * @param error 允许的误差
+     * @param lcm 需要对齐的细分的最小公倍数
+     * @returns 时间对齐的Note对象
+     */
     align(bpm, error = 3, lcm = 96) {
         this.time = timeAlign(this.time, bpm, error, lcm);
         return this;
     }
 }
 class NoteGroup extends Array {
+    /**
+     * @param notes Note容器
+     */
     constructor(notes = []) {
         super();
         if (notes) {
@@ -4032,40 +4080,57 @@ class NoteGroup extends Array {
             });
         }
     }
+    /**
+     * 获取类名
+     */
     get type() {
         return this.constructor.name;
     }
+    /**
+     * Note容器内所有Note的Note语句形式字符串
+     * @returns 转换后的字符串
+     */
     toString() {
         let str = '';
-        this.forEach((value, index, arr) => {
+        this.forEach((value, index) => {
             if (value) {
                 str += value.toString();
             }
-            if (index < arr.length - 1) {
+            if (index < this.length - 1) {
                 str += '\n';
             }
         });
         return str;
     }
+    /**
+     * 向容器中追加Note对象或Note容器对象
+     * @param objs 接收Note或Note容器对象
+     * @returns 追加后的Note容器长度
+     */
     push(...objs) {
         objs.forEach((obj) => {
             super.push(obj);
         });
         return this.length;
     }
+    /**
+     * 连接多个Note容器对象(注：此方法会改变 NoteGroup 内容)
+     * @param iterables 待连接的Note容器对象
+     * @returns 连接后的Note容器
+     */
     concat(...iterables) {
         iterables.forEach((iter) => {
-            if (iter instanceof NoteGroup) {
-                super.concat(iter);
-            }
-            else {
-                iter.forEach((item) => {
-                    this.push(item);
-                });
-            }
+            iter.forEach((item) => {
+                this.push(item);
+            });
         });
         return this;
     }
+    /**
+     * 将Note容器整体偏移到一个时间点
+     * @param dest 偏移到的时间点
+     * @returns 偏移后的Note容器
+     */
     moveto(dest) {
         this.forEach((value, index) => {
             if (value) {
@@ -4074,6 +4139,23 @@ class NoteGroup extends Array {
         });
         return this;
     }
+    /**
+     * 将Note容器整体偏移一个毫秒数
+     * @param value 偏移到的时间点
+     * @returns 偏移后的Note容器
+     */
+    offsetto(value) {
+        this.forEach((v, index) => {
+            if (v) {
+                this[index].offsetto(value);
+            }
+        });
+        return this;
+    }
+    /**
+     * 将Note容器内部所有Note镜像
+     * @returns 镜像后的Note容器
+     */
     mirror() {
         this.forEach((value, index) => {
             if (value) {
@@ -4082,6 +4164,13 @@ class NoteGroup extends Array {
         });
         return this;
     }
+    /**
+     * 将Note容器内部所有Note对象时间对齐
+     * @param bpm 基准bpm
+     * @param error 允许的误差
+     * @param lcm 需要对齐的细分的最小公倍数
+     * @returns 时间对齐的Note容器
+     */
     align(bpm, error = 3, lcm = 96) {
         this.forEach((value, index) => {
             if (value) {
@@ -4118,13 +4207,25 @@ class Tap extends Note {
 }
 
 class Hold extends Tap {
+    /**
+     * @param time Note时间点
+     * @param totime Note结束时间点
+     * @param lane Note轨道，范围0~3
+     */
     constructor(time, totime, lane) {
         super(time, lane);
         this.totime = Math.floor(totime);
     }
+    /**
+     * Note的持续时长
+     */
     get length() {
         return Math.floor(this.totime - this.time);
     }
+    /**
+     * 将对象转换为字符串
+     * @returns Note的Note语句形式字符串
+     */
     toString() {
         return `hold(${Math.floor(this.time)},${Math.floor(this.totime)},${this._lane});`;
     }
@@ -4134,8 +4235,13 @@ class Hold extends Tap {
         this.totime += this.time - time;
         return this;
     }
-    copyto(dest) {
-        const alterthis = this.copy();
+    /**
+     * 返回移动到某个时间点Note对象的深拷贝
+     * @param dest 偏移到的时间点
+     * @returns 偏移后Note的深拷贝
+     */
+    cloneto(dest) {
+        const alterthis = this.clone();
         return alterthis.moveto(dest);
     }
     offsetto(value) {
@@ -4153,6 +4259,9 @@ class Hold extends Tap {
     }
 }
 
+/**
+ * 缓动类型中合法的字符串
+ */
 const slideeasinglist = [
     'b',
     's',
@@ -4163,6 +4272,9 @@ const slideeasinglist = [
     'sosi',
     'siso'
 ];
+/**
+ * 拓展缓动类型中合法的字符串，可以用于计算但是不能输出
+ */
 const slideeasingexlist = [
     'bb',
     'sb',
@@ -4177,10 +4289,16 @@ const slideeasingexlist = [
     'bso',
     'sso',
 ];
+/**
+ * Arc的fx属性中合法的字符串
+ */
 const fxlist = [
     'full',
     'incremental'
 ];
+/**
+ * Camera的easing属性中合法的字符串
+ */
 const cameraeasinglist = [
     'qi',
     'qo',
@@ -4188,6 +4306,9 @@ const cameraeasinglist = [
     'reset',
     's'
 ];
+/**
+ * SceneControl的scenetype属性中合法的字符串
+ */
 const scenetypelist = [
     'trackshow',
     'trackhide',
@@ -4196,7 +4317,7 @@ const scenetypelist = [
     'arcahvdebris',
     'hidegroup'
 ];
-const validstrings = {
+var validstrings = {
     slideeasinglist: slideeasinglist,
     slideeasingexlist: slideeasingexlist,
     fxlist: fxlist,
@@ -4288,6 +4409,19 @@ function slicer(time, fromtime, totime, fromposition, toposition, easingtype = '
 }
 
 class Arc extends Hold {
+    /**
+     * @param time Note时间点
+     * @param totime Note结束时间点
+     * @param fromx 起始点x坐标
+     * @param tox 起始点x坐标
+     * @param slideeasing 缓动类型，支持s|b|si|so两两组合/缓动函数/两个缓动函数组成的列表
+     * @param fromy 终点y坐标
+     * @param toy 终点y坐标
+     * @param color Arc颜色，要求>=0
+     * @param isskyline 是否为黑线
+     * @param skynote 天键时间点列表
+     * @param fx FX
+     */
     constructor(time, totime, fromx, tox, slideeasing, fromy, toy, color, isskyline, skynote = [], fx = 'none') {
         super(time, totime, 1);
         this.fromx = fromx;
@@ -4336,8 +4470,8 @@ class Arc extends Hold {
             }
         }
         else if (!(easingtype instanceof Function)) {
-            if (validstrings.slideeasinglist.indexOf(easingtype) == -1) {
-                throw `invalid value ${easingtype} for attribute "slideeasing" (only accept ${validstrings.slideeasinglist})`;
+            if (slideeasinglist.indexOf(easingtype) == -1) {
+                throw `invalid value ${easingtype} for attribute "slideeasing" (only accept ${slideeasinglist})`;
             }
         }
         this._slideeasing = easingtype;
@@ -4347,8 +4481,8 @@ class Arc extends Hold {
     }
     set fx(value) {
         if (value != 'none') {
-            if (validstrings.fxlist.indexOf(value) == -1) {
-                throw `invalid value ${value} for attribute "fx" (only accept ${validstrings.fxlist})`;
+            if (fxlist.indexOf(value) == -1) {
+                throw `invalid value ${value} for attribute "fx" (only accept ${fxlist})`;
             }
         }
         this._fx = value;
@@ -4400,12 +4534,21 @@ class Arc extends Hold {
         }
         return [x_type, y_type];
     }
-    get(item) {
+    /**
+     * 获取对应时间点的Arc坐标
+     * @param time 时间点
+     * @returns 坐标
+     */
+    get(time) {
         const easingtype = this.__geteasingtype();
-        const slice_x = slicer(item, this.time, this.totime, this.fromx, this.tox, easingtype[0]);
-        const slice_y = slicer(item, this.time, this.totime, this.fromy, this.toy, easingtype[1]);
+        const slice_x = slicer(time, this.time, this.totime, this.fromx, this.tox, easingtype[0]);
+        const slice_y = slicer(time, this.time, this.totime, this.fromy, this.toy, easingtype[1]);
         return [slice_x, slice_y];
     }
+    /**
+     * 将对象转换为字符串(注：只有slideeasing值为note.validstrings.slideeasinglist中的规定值时才允许返回)
+     * @returns 转换后的字符串
+     */
     toString() {
         const arcstr = `arc(${this.time},${this.totime},${this.fromx.toFixed(2)},${this.tox.toFixed(2)},${this._slideeasing},${this.fromy.toFixed(2)},${this.toy.toFixed(2)},${this._color},${this._fx},${this.isskyline})`;
         let skynotestr = '';
@@ -4420,6 +4563,11 @@ class Arc extends Hold {
         }
         return arcstr + ((skynotestr == '') ? '' : `[${skynotestr}]`) + ';';
     }
+    /**
+     * 将Note移动到某个时间点
+     * @param dest 偏移到的时间点
+     * @returns 偏移后的Note对象
+     */
     moveto(dest) {
         const offset = dest - this.time;
         for (let index = 0; index < this._skynote.length; index++) {
@@ -4427,16 +4575,29 @@ class Arc extends Hold {
         }
         return this;
     }
+    /**
+     * 将Note镜像(注：此方法会修改对象)
+     * @returns 镜像后的Note
+     */
     mirror() {
         this.fromx = 1 - this.fromx;
         this.tox = 1 - this.tox;
         return this;
     }
+    /**
+     * 将Note垂直镜像(注：此方法会修改对象)
+     * @returns 镜像后的Note
+     */
     vmirror() {
         this.fromy = 1 - this.fromy;
         this.toy = 1 - this.toy;
         return this;
     }
+    /**
+     * 偏移Note指定的毫秒数
+     * @param value 偏移的毫秒数
+     * @returns 偏移后的Note对象
+     */
     offsetto(value) {
         super.offsetto(value);
         if (this._skynote) {
@@ -4446,6 +4607,13 @@ class Arc extends Hold {
         }
         return this;
     }
+    /**
+     * 将Note时间对齐
+     * @param bpm 基准bpm
+     * @param error 允许的误差
+     * @param lcm 需要对齐的细分的最小公倍数
+     * @returns 时间对齐的Note对象
+     */
     align(bpm, error = 3, lcm = 96) {
         super.align(bpm, error, lcm);
         if (this._skynote) {
@@ -4455,6 +4623,12 @@ class Arc extends Hold {
         }
         return this;
     }
+    /**
+     * 偏移Arc指定大小
+     * @param xValue x轴偏移量
+     * @param yValue y轴偏移量
+     * @returns 偏移后的Note对象
+     */
     transfer(xValue, yValue) {
         this.fromx += xValue;
         this.tox += xValue;
@@ -4507,6 +4681,9 @@ class SceneControl extends Note {
 }
 
 class Camera extends Note {
+    /**
+     * @param time Note时间点
+     */
     constructor(time, transverse, bottomzoom, linezoom, steadyangle, topzoom, angle, easing, lastingtime) {
         super(time);
         this.transverse = transverse;
@@ -4535,6 +4712,9 @@ class Camera extends Note {
 }
 
 class Flick extends Note {
+    /**
+     * @param time Note时间点
+     */
     constructor(time, x, y, dx, dy) {
         super(time);
         this.x = x;
@@ -4593,6 +4773,11 @@ function sort(unsorted) {
 }
 
 class AffList extends NoteGroup {
+    /**
+     * @param notes Note容器
+     * @param offset 控制AudioOffset
+     * @param desnity 控制TimingPointDesnityFactor
+     */
     constructor(notes = [], offset = 0, desnity = 1) {
         super(notes);
         this.offset = Math.floor(offset);
@@ -4667,29 +4852,30 @@ class TimingGroup extends NoteGroup {
     }
 }
 
-const note = {
-    Note,
-    NoteGroup,
-    timeAlign,
-    Tap,
-    Hold,
-    Arc,
-    Timing,
-    SceneControl,
-    Camera,
-    Flick,
-    TimingGroup,
-    AffList
+var note = {
+    Note: Note,
+    NoteGroup: NoteGroup,
+    timeAlign: timeAlign,
+    Tap: Tap,
+    Hold: Hold,
+    Arc: Arc,
+    Timing: Timing,
+    SceneControl: SceneControl,
+    Camera: Camera,
+    Flick: Flick,
+    TimingGroup: TimingGroup,
+    AffList: AffList,
+    validstrings: validstrings
 };
 
-function stringify(notelist) {
+function stringify$1(notelist) {
     notelist = sort(notelist);
     return notelist.toString();
 }
 function _notestriter(notestr, termsign) {
     return notestr.slice(0, notestr.indexOf(termsign));
 }
-function parseLine(notestr) {
+function parseLine$1(notestr) {
     let tempnotestr = notestr.trim();
     const noteobj = new Note(0);
     // 依次切割出note类型，参数，      子表达式（如果有）
@@ -4754,7 +4940,7 @@ function parseLine(notestr) {
     }
     return noteobj;
 }
-function parse(affstr) {
+function parse$1(affstr) {
     const notestrlist = affstr.split('\n');
     const notelist = new AffList();
     let tempstruct;
@@ -4772,7 +4958,7 @@ function parse(affstr) {
                 tempstruct = new TimingGroup();
             }
             else {
-                const loadednote = parseLine(stripedlinestr);
+                const loadednote = parseLine$1(stripedlinestr);
                 if (loadednote instanceof TimingGroup) {
                     if (tempstruct.length == 0) {
                         tempstruct = loadednote;
@@ -4794,20 +4980,22 @@ function parse(affstr) {
     });
     return notelist;
 }
-
-const parser = {
-    stringify,
-    parseLine,
-    parse
+var parser = {
+    stringify: stringify$1,
+    parseLine: parseLine$1,
+    parse: parse$1
 };
-const aff = {
+
+const parse = parser.parse;
+const parseLine = parser.parseLine;
+const stringify = parser.stringify;
+var index = {
     note,
     parser,
-    stringify,
+    parse,
     parseLine,
-    parse
+    stringify
 };
-Object.assign(aff, note);
 
-export { aff as default };
+export { index as default, note, parse, parseLine, parser, stringify };
 //# sourceMappingURL=affutil.esm.js.map

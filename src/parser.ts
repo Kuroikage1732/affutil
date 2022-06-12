@@ -165,4 +165,4 @@ export default {
     stringify: stringify,
     parseLine: parseLine,
     parse: parse
-}
+};
