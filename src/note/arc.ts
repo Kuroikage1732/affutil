@@ -98,18 +98,6 @@ export class Arc extends Hold {
         return this._slideeasing;
     }
 
-    set fx(value) {
-        if (value != 'none') {
-            if (fxlist.indexOf(value) == -1) {
-                throw `invalid value ${value} for attribute "fx" (only accept ${fxlist})`;
-            }
-        }
-        this._fx = value;
-    }
-    get fx() {
-        return this._fx;
-    }
-
     __geteasingtype(): [string, string] | [EasingFunc, EasingFunc] {
         const se = this.slideeasing;
         let x_type: any;

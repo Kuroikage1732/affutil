@@ -9,10 +9,10 @@ export class Tap extends Note {
     }
 
     set lane(lane: number) {
-        if(lane == Math.floor(lane) && lane > 0 && lane < 5) {
+        if(lane == Math.floor(lane) && lane >= 0 && lane <= 5) {
             this._lane = lane;
         } else {
-            throw `invalid value ${lane} for attribute "lane" (only accept 1~4)`;
+            throw `invalid value ${lane} for attribute "lane" (only accept 0~5)`;
         }
     }
     get lane() {

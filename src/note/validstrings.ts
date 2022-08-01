@@ -31,14 +31,6 @@ const slideeasingexlist: string[] = [
 ];
 
 /**
- * Arc的fx属性中合法的字符串
- */
-const fxlist: string[] = [
-    'full',
-    'incremental'
-];
-
-/**
  * Camera的easing属性中合法的字符串
  */
 const cameraeasinglist: string[] = [
@@ -58,7 +50,9 @@ const scenetypelist: string[] = [
     'redline',
     'arcahvdistort',
     'arcahvdebris',
-    'hidegroup'
+    'hidegroup',
+    'enwidencamera',
+    'enwidenlanes'
 ];
 
 export {
