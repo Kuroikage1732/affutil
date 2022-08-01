@@ -176,6 +176,7 @@ export class Arc extends Hold {
      */
     moveto(dest: number) {
         const offset = dest - this.time;
+        super.moveto(dest);
         for (let index = 0; index < this._skynote.length; index++) {
             this._skynote[index] += offset;
         }

@@ -1,5 +1,5 @@
 /*!
- * affutil 0.2.0 (https://github.com/kuroikage1732/affutil#readme)
+ * affutil 0.2.3 (https://github.com/kuroikage1732/affutil#readme)
  * Copyright 2022-2022 Kuroikage1732
  * Licensed under MIT
  */
@@ -4553,6 +4553,7 @@ class Arc extends Hold {
      */
     moveto(dest) {
         const offset = dest - this.time;
+        super.moveto(dest);
         for (let index = 0; index < this._skynote.length; index++) {
             this._skynote[index] += offset;
         }
