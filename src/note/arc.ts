@@ -1,6 +1,6 @@
 import { Hold } from './hold';
 import { cloneDeep } from 'lodash-es';
-import { fxlist, slideeasinglist } from './validstrings';
+import { slideeasinglist } from './validstrings';
 import { timeAlign } from './common_note';
 import { EasingFunc, slicer } from '../easing/index';
 
@@ -13,7 +13,7 @@ export class Arc extends Hold {
     _color!: number;
     isskyline: boolean;
     _skynote!: number[];
-    _fx!: string;
+    fx!: string;
 
     /**
      * @param time Note时间点
@@ -155,7 +155,7 @@ export class Arc extends Hold {
      * @returns 转换后的字符串
      */
     toString() {
-        const arcstr = `arc(${this.time},${this.totime},${this.fromx.toFixed(2)},${this.tox.toFixed(2)},${this._slideeasing},${this.fromy.toFixed(2)},${this.toy.toFixed(2)},${this._color},${this._fx},${this.isskyline})`;
+        const arcstr = `arc(${this.time},${this.totime},${this.fromx.toFixed(2)},${this.tox.toFixed(2)},${this._slideeasing},${this.fromy.toFixed(2)},${this.toy.toFixed(2)},${this._color},${this.fx},${this.isskyline})`;
         let skynotestr = '';
         if (this._skynote.length > 0) {
             for (let index = 0; index < this._skynote.length; index++) {

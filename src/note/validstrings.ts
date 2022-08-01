@@ -58,7 +58,6 @@ const scenetypelist: string[] = [
 export {
     slideeasinglist,
     slideeasingexlist,
-    fxlist,
     cameraeasinglist,
     scenetypelist
 };
@@ -66,7 +65,6 @@ export {
 export default {
     slideeasinglist: slideeasinglist,
     slideeasingexlist: slideeasingexlist,
-    fxlist: fxlist,
     cameraeasinglist: cameraeasinglist,
     scenetypelist: scenetypelist
 };

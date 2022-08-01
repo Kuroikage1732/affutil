@@ -4187,11 +4187,11 @@ class Tap extends Note {
         this.lane = lane;
     }
     set lane(lane) {
-        if (lane == Math.floor(lane) && lane > 0 && lane < 5) {
+        if (lane == Math.floor(lane) && lane >= 0 && lane <= 5) {
             this._lane = lane;
         }
         else {
-            throw `invalid value ${lane} for attribute "lane" (only accept 1~4)`;
+            throw `invalid value ${lane} for attribute "lane" (only accept 0~5)`;
         }
     }
     get lane() {
@@ -4290,13 +4290,6 @@ const slideeasingexlist = [
     'sso',
 ];
 /**
- * Arc的fx属性中合法的字符串
- */
-const fxlist = [
-    'full',
-    'incremental'
-];
-/**
  * Camera的easing属性中合法的字符串
  */
 const cameraeasinglist = [
@@ -4315,12 +4308,13 @@ const scenetypelist = [
     'redline',
     'arcahvdistort',
     'arcahvdebris',
-    'hidegroup'
+    'hidegroup',
+    'enwidencamera',
+    'enwidenlanes'
 ];
 var validstrings = {
     slideeasinglist: slideeasinglist,
     slideeasingexlist: slideeasingexlist,
-    fxlist: fxlist,
     cameraeasinglist: cameraeasinglist,
     scenetypelist: scenetypelist
 };
@@ -4479,17 +4473,6 @@ class Arc extends Hold {
     get slideeasing() {
         return this._slideeasing;
     }
-    set fx(value) {
-        if (value != 'none') {
-            if (fxlist.indexOf(value) == -1) {
-                throw `invalid value ${value} for attribute "fx" (only accept ${fxlist})`;
-            }
-        }
-        this._fx = value;
-    }
-    get fx() {
-        return this._fx;
-    }
     __geteasingtype() {
         const se = this.slideeasing;
         let x_type;
@@ -4550,7 +4533,7 @@ class Arc extends Hold {
      * @returns 转换后的字符串
      */
     toString() {
-        const arcstr = `arc(${this.time},${this.totime},${this.fromx.toFixed(2)},${this.tox.toFixed(2)},${this._slideeasing},${this.fromy.toFixed(2)},${this.toy.toFixed(2)},${this._color},${this._fx},${this.isskyline})`;
+        const arcstr = `arc(${this.time},${this.totime},${this.fromx.toFixed(2)},${this.tox.toFixed(2)},${this._slideeasing},${this.fromy.toFixed(2)},${this.toy.toFixed(2)},${this._color},${this.fx},${this.isskyline})`;
         let skynotestr = '';
         if (this._skynote.length > 0) {
             for (let index = 0; index < this._skynote.length; index++) {

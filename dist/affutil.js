@@ -4234,11 +4234,11 @@
 
       var prototypeAccessors = { lane: { configurable: true } };
       prototypeAccessors.lane.set = function (lane) {
-          if (lane == Math.floor(lane) && lane > 0 && lane < 5) {
+          if (lane == Math.floor(lane) && lane >= 0 && lane <= 5) {
               this._lane = lane;
           }
           else {
-              throw ("invalid value " + lane + " for attribute \"lane\" (only accept 1~4)");
+              throw ("invalid value " + lane + " for attribute \"lane\" (only accept 0~5)");
           }
       };
       prototypeAccessors.lane.get = function () {
@@ -4348,13 +4348,6 @@
       'bso',
       'sso' ];
   /**
-   * Arc的fx属性中合法的字符串
-   */
-  var fxlist = [
-      'full',
-      'incremental'
-  ];
-  /**
    * Camera的easing属性中合法的字符串
    */
   var cameraeasinglist = [
@@ -4373,12 +4366,13 @@
       'redline',
       'arcahvdistort',
       'arcahvdebris',
-      'hidegroup'
+      'hidegroup',
+      'enwidencamera',
+      'enwidenlanes'
   ];
   var validstrings = {
       slideeasinglist: slideeasinglist,
       slideeasingexlist: slideeasingexlist,
-      fxlist: fxlist,
       cameraeasinglist: cameraeasinglist,
       scenetypelist: scenetypelist
   };
@@ -4494,7 +4488,7 @@
       Arc.prototype = Object.create( Hold && Hold.prototype );
       Arc.prototype.constructor = Arc;
 
-      var prototypeAccessors = { skynote: { configurable: true },color: { configurable: true },slideeasing: { configurable: true },fx: { configurable: true } };
+      var prototypeAccessors = { skynote: { configurable: true },color: { configurable: true },slideeasing: { configurable: true } };
       prototypeAccessors.skynote.set = function (times) {
           if (times) {
               this._skynote = cloneDeep(times);
@@ -4539,17 +4533,6 @@
       };
       prototypeAccessors.slideeasing.get = function () {
           return this._slideeasing;
-      };
-      prototypeAccessors.fx.set = function (value) {
-          if (value != 'none') {
-              if (fxlist.indexOf(value) == -1) {
-                  throw ("invalid value " + value + " for attribute \"fx\" (only accept " + fxlist + ")");
-              }
-          }
-          this._fx = value;
-      };
-      prototypeAccessors.fx.get = function () {
-          return this._fx;
       };
       Arc.prototype.__geteasingtype = function __geteasingtype () {
           var se = this.slideeasing;
@@ -4611,7 +4594,7 @@
        * @returns 转换后的字符串
        */
       Arc.prototype.toString = function toString () {
-          var arcstr = "arc(" + (this.time) + "," + (this.totime) + "," + (this.fromx.toFixed(2)) + "," + (this.tox.toFixed(2)) + "," + (this._slideeasing) + "," + (this.fromy.toFixed(2)) + "," + (this.toy.toFixed(2)) + "," + (this._color) + "," + (this._fx) + "," + (this.isskyline) + ")";
+          var arcstr = "arc(" + (this.time) + "," + (this.totime) + "," + (this.fromx.toFixed(2)) + "," + (this.tox.toFixed(2)) + "," + (this._slideeasing) + "," + (this.fromy.toFixed(2)) + "," + (this.toy.toFixed(2)) + "," + (this._color) + "," + (this.fx) + "," + (this.isskyline) + ")";
           var skynotestr = '';
           if (this._skynote.length > 0) {
               for (var index = 0; index < this._skynote.length; index++) {

@@ -22,7 +22,7 @@ var a_normal_list = [
 ];
 
 var tg = new aff.note.TimingGroup(
-    [new aff.Timing(0, 222.22)],
+    [new aff.note.Timing(0, 222.22)],
     'noinput'
 );
 
