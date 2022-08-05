@@ -30,9 +30,9 @@ export class Hold extends Tap {
     }
 
     moveto(dest: number) {
-        const time = this.time;
+        const originTime = this.time;
         super.moveto(dest);
-        this.totime += this.time - time;
+        this.totime += this.time - originTime;
         return this;
     }
 

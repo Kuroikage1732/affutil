@@ -1,6 +1,6 @@
 {
   "name": "affutil",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "a Javascript Module for Arcaea Format File",
   "main": "dist/affutil.js",
   "module": "dist/affutil.esm.js",

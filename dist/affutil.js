@@ -1,5 +1,5 @@
 /*!
- * affutil 0.2.3 (https://github.com/kuroikage1732/affutil#readme)
+ * affutil 0.2.4 (https://github.com/kuroikage1732/affutil#readme)
  * Copyright 2022-2022 Kuroikage1732
  * Licensed under MIT
  */
@@ -4282,9 +4282,9 @@
           return ("hold(" + (Math.floor(this.time)) + "," + (Math.floor(this.totime)) + "," + (this._lane) + ");");
       };
       Hold.prototype.moveto = function moveto (dest) {
-          var time = this.time;
+          var originTime = this.time;
           Tap.prototype.moveto.call(this, dest);
-          this.totime += this.time - time;
+          this.totime += this.time - originTime;
           return this;
       };
       /**

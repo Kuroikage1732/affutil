@@ -1,5 +1,5 @@
 /*!
- * affutil 0.2.3 (https://github.com/kuroikage1732/affutil#readme)
+ * affutil 0.2.4 (https://github.com/kuroikage1732/affutil#readme)
  * Copyright 2022-2022 Kuroikage1732
  * Licensed under MIT
  */
@@ -4230,9 +4230,9 @@ class Hold extends Tap {
         return `hold(${Math.floor(this.time)},${Math.floor(this.totime)},${this._lane});`;
     }
     moveto(dest) {
-        const time = this.time;
+        const originTime = this.time;
         super.moveto(dest);
-        this.totime += this.time - time;
+        this.totime += this.time - originTime;
         return this;
     }
     /**

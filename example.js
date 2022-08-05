@@ -1,4 +1,4 @@
-var aff = require("affutil");
+var aff = require("./dist/affutil.js");
 
 var affstr = `
 AudioOffset:5
@@ -20,6 +20,8 @@ var a_normal_list = [
     new aff.note.Hold(0, 100, 2),
     new aff.note.Arc(0, 200, 0, 1, 's', 1, 0, 0, true, [0, 100, 200]),
 ];
+
+a_normal_list[3].moveto(250);
 
 var tg = new aff.note.TimingGroup(
     [new aff.note.Timing(0, 222.22)],
