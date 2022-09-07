@@ -41,30 +41,14 @@ const cameraeasinglist: string[] = [
     's'
 ];
 
-/**
- * SceneControl的scenetype属性中合法的字符串
- */
-const scenetypelist: string[] = [
-    'trackshow',
-    'trackhide',
-    'redline',
-    'arcahvdistort',
-    'arcahvdebris',
-    'hidegroup',
-    'enwidencamera',
-    'enwidenlanes'
-];
-
 export {
     slideeasinglist,
     slideeasingexlist,
-    cameraeasinglist,
-    scenetypelist
+    cameraeasinglist
 };
 
 export default {
     slideeasinglist: slideeasinglist,
     slideeasingexlist: slideeasingexlist,
-    cameraeasinglist: cameraeasinglist,
-    scenetypelist: scenetypelist
+    cameraeasinglist: cameraeasinglist
 };

@@ -35,29 +35,26 @@ export function parseLine(notestr: string) {
     const sub_expression = _notestriter(tempnotestr, ';');
     tempnotestr = tempnotestr.slice(keyword.length + 1, tempnotestr.length);
 
-    if(keyword == '' && paralist) {
+    if (keyword == '' && paralist) {
         return new Tap(
             parseInt(paralist[0]),
             parseInt(paralist[1])
         );
-    } else if(keyword == 'hold') {
+    } else if (keyword == 'hold') {
         return new Hold(
             parseInt(paralist[0]),
             parseInt(paralist[1]),
             parseInt(paralist[2])
         );
-    } else if(keyword == 'arc') {
+    } else if (keyword == 'arc') {
         let isskyline;
-        if(paralist[9] == 'true') {
+        if (paralist[9] == 'true') {
             isskyline = true;
         } else {
             isskyline = false;
-            if(paralist[9] != 'false') {
-                throw 'AffNoteValueError';
-            }
         }
         const skynotetimelist: number[] = [];
-        if(sub_expression) {
+        if (sub_expression) {
             const splited = sub_expression.split(',');
             splited.forEach((each) => {
                 skynotetimelist.push(parseInt(each.slice(each.indexOf('(') + 1, each.indexOf(')'))));
@@ -76,13 +73,13 @@ export function parseLine(notestr: string) {
             skynotetimelist,
             paralist[8]
         );
-    } else if(keyword == 'timing') {
+    } else if (keyword == 'timing') {
         return new Timing(
             parseInt(paralist[0]),
             parseFloat(paralist[1]),
             parseFloat(paralist[2])
         );
-    } else if(keyword == 'camera') {
+    } else if (keyword == 'camera') {
         return new Camera(
             parseInt(paralist[0]),
             parseFloat(paralist[1]),
@@ -94,24 +91,20 @@ export function parseLine(notestr: string) {
             paralist[7],
             parseInt(paralist[8])
         );
-    } else if(keyword == 'scenecontrol') {
+    } else if (keyword == 'scenecontrol') {
         const scenetype = paralist[1];
-        if(['trackshow', 'trackhide'].indexOf(scenetype) != -1) {
+        if (paralist.length == 2) {
             return new SceneControl(
                 parseInt(paralist[0]),
                 scenetype
             );
-        } else if(['redline', 'arcahvdistort', 'arcahvdebris', 'hidegroup'].indexOf(scenetype) != -1) {
-            return new SceneControl(
-                parseInt(paralist[0]),
-                scenetype,
-                parseFloat(paralist[2]),
-                parseInt(paralist[3])
-            );
-        } else {
-            throw 'AffSceneTypeError';
         }
-    } else if(keyword == 'flick') {
+        return new SceneControl(
+            parseInt(paralist[0]),
+            scenetype,
+            paralist.slice(2)
+        );
+    } else if (keyword == 'flick') {
         return new Flick(
             parseInt(paralist[0]),
             parseFloat(paralist[1]),
@@ -119,7 +112,7 @@ export function parseLine(notestr: string) {
             parseFloat(paralist[3]),
             parseFloat(paralist[4])
         );
-    } else if(keyword == 'timinggroup') {
+    } else if (keyword == 'timinggroup') {
         const temptg = new TimingGroup([], paralist.join(','));
         return temptg;
     }
@@ -132,24 +125,24 @@ export function parse(affstr: string) {
     let tempstruct: TimingGroup;
     notestrlist.forEach((eachline) => {
         const stripedlinestr = eachline.trim();
-        if(['', '-'].indexOf(stripedlinestr) == -1) {
-            if(stripedlinestr.startsWith('AudioOffset:')) {
+        if (['', '-'].indexOf(stripedlinestr) == -1) {
+            if (stripedlinestr.startsWith('AudioOffset:')) {
                 notelist.offset = parseInt(stripedlinestr.slice(stripedlinestr.indexOf(':') + 1, stripedlinestr.length));
-            } else if(stripedlinestr.startsWith('TimingPointDensityFactor')) {
+            } else if (stripedlinestr.startsWith('TimingPointDensityFactor')) {
                 notelist.desnity = parseInt(stripedlinestr.slice(stripedlinestr.indexOf(':') + 1, stripedlinestr.length));
-            } else if(stripedlinestr == '};') {
+            } else if (stripedlinestr == '};') {
                 notelist.push(tempstruct);
                 tempstruct = new TimingGroup();
             } else {
                 const loadednote = parseLine(stripedlinestr);
-                if(loadednote instanceof TimingGroup) {
-                    if(tempstruct.length == 0) {
+                if (loadednote instanceof TimingGroup) {
+                    if (tempstruct.length == 0) {
                         tempstruct = loadednote;
                     } else {
                         throw 'Timinggroup nesting is not allowed';
                     }
                 } else {
-                    if(tempstruct) {
+                    if (tempstruct) {
                         tempstruct.push(loadednote);
                     } else {
                         notelist.push(loadednote);
