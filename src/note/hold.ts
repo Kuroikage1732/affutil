@@ -26,7 +26,7 @@ export class Hold extends Tap {
      * @returns Note的Note语句形式字符串
      */
     toString() {
-        return `hold(${Math.floor(this.time)},${Math.floor(this.totime)},${this._lane});`;
+        return `hold(${Math.floor(this.time)},${Math.floor(this.totime)},${this.lane});`;
     }
 
     moveto(dest: number) {

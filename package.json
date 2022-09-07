@@ -1,6 +1,6 @@
 {
   "name": "affutil",
-  "version": "0.2.5",
+  "version": "0.2.7",
   "description": "a Javascript Module for Arcaea Format File",
   "main": "dist/affutil.js",
   "module": "dist/affutil.esm.js",
@@ -9,7 +9,8 @@
     "test": "node ./example.js",
     "eslint": "eslint --fix src/**/*.ts",
     "lint": "npm run eslint",
-    "build": "npm run eslint && tsc -p src/tsconfig.json && rollup --config"
+    "build": "npm run eslint && tsc -p src/tsconfig.json && rollup --config",
+    "publish": "npm publish"
   },
   "files": [
     "dist",

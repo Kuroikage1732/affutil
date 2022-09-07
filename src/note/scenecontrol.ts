@@ -1,5 +1,4 @@
 import { Note } from './common_note';
-import validstrings from './validstrings';
 
 export class SceneControl extends Note {
     scenetype: string;

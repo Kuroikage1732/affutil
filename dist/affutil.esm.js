@@ -1,5 +1,5 @@
 /*!
- * affutil 0.2.4 (https://github.com/kuroikage1732/affutil#readme)
+ * affutil 0.2.7 (https://github.com/kuroikage1732/affutil#readme)
  * Copyright 2022-2022 Kuroikage1732
  * Licensed under MIT
  */
@@ -4186,22 +4186,11 @@ class Tap extends Note {
         super(time);
         this.lane = lane;
     }
-    set lane(lane) {
-        if (lane == Math.floor(lane) && lane >= 0 && lane <= 5) {
-            this._lane = lane;
-        }
-        else {
-            throw `invalid value ${lane} for attribute "lane" (only accept 0~5)`;
-        }
-    }
-    get lane() {
-        return this._lane;
-    }
     toString() {
-        return `(${Math.floor(this.time)},${this._lane});`;
+        return `(${Math.floor(this.time)},${this.lane});`;
     }
     mirror() {
-        this._lane = 5 - this._lane;
+        this.lane = 5 - this.lane;
         return this;
     }
 }
@@ -4227,7 +4216,7 @@ class Hold extends Tap {
      * @returns Note的Note语句形式字符串
      */
     toString() {
-        return `hold(${Math.floor(this.time)},${Math.floor(this.totime)},${this._lane});`;
+        return `hold(${Math.floor(this.time)},${Math.floor(this.totime)},${this.lane});`;
     }
     moveto(dest) {
         const originTime = this.time;
@@ -4299,24 +4288,10 @@ const cameraeasinglist = [
     'reset',
     's'
 ];
-/**
- * SceneControl的scenetype属性中合法的字符串
- */
-const scenetypelist = [
-    'trackshow',
-    'trackhide',
-    'redline',
-    'arcahvdistort',
-    'arcahvdebris',
-    'hidegroup',
-    'enwidencamera',
-    'enwidenlanes'
-];
 var validstrings = {
     slideeasinglist: slideeasinglist,
     slideeasingexlist: slideeasingexlist,
-    cameraeasinglist: cameraeasinglist,
-    scenetypelist: scenetypelist
+    cameraeasinglist: cameraeasinglist
 };
 
 function linear(percent) {
@@ -4634,33 +4609,15 @@ class Timing extends Note {
 }
 
 class SceneControl extends Note {
-    constructor(time, scenetype, x = 0, y = 0) {
+    constructor(time, scenetype, cmd = []) {
         super(time);
         this.scenetype = scenetype;
-        this.x = x;
-        this.y = y;
-    }
-    set scenetype(type) {
-        if (validstrings.scenetypelist.indexOf(type) != -1) {
-            this._scenetype = type;
-        }
-        else {
-            throw `${type} is not a valid scene type`;
-        }
-    }
-    get scenetype() {
-        return this._scenetype;
+        this.cmd = cmd;
     }
     toString() {
-        if (['trackshow', 'trackhide'].indexOf(this._scenetype) != -1) {
-            return `scenecontrol(${Math.floor(this.time)},${this._scenetype});`;
-        }
-        else if (['redline', 'arcahvdistort', 'arcahvdebris', 'hidegroup'].indexOf(this._scenetype) != -1) {
-            return `scenecontrol(${Math.floor(this.time)},${this._scenetype},${this.x.toFixed(2)},${this.y});`;
-        }
-        else {
-            throw `${this._scenetype} is not a valid scene type`;
-        }
+        if (this.cmd.length == 0)
+            return `scenecontrol(${Math.floor(this.time)},${this.scenetype});`;
+        return `scenecontrol(${Math.floor(this.time)},${this.scenetype},${this.cmd.join(',')});`;
     }
 }
 
@@ -4884,9 +4841,6 @@ function parseLine$1(notestr) {
         }
         else {
             isskyline = false;
-            if (paralist[9] != 'false') {
-                throw 'AffNoteValueError';
-            }
         }
         const skynotetimelist = [];
         if (sub_expression) {
@@ -4905,15 +4859,10 @@ function parseLine$1(notestr) {
     }
     else if (keyword == 'scenecontrol') {
         const scenetype = paralist[1];
-        if (['trackshow', 'trackhide'].indexOf(scenetype) != -1) {
+        if (paralist.length == 2) {
             return new SceneControl(parseInt(paralist[0]), scenetype);
         }
-        else if (['redline', 'arcahvdistort', 'arcahvdebris', 'hidegroup'].indexOf(scenetype) != -1) {
-            return new SceneControl(parseInt(paralist[0]), scenetype, parseFloat(paralist[2]), parseInt(paralist[3]));
-        }
-        else {
-            throw 'AffSceneTypeError';
-        }
+        return new SceneControl(parseInt(paralist[0]), scenetype, paralist.slice(2));
     }
     else if (keyword == 'flick') {
         return new Flick(parseInt(paralist[0]), parseFloat(paralist[1]), parseFloat(paralist[2]), parseFloat(paralist[3]), parseFloat(paralist[4]));
